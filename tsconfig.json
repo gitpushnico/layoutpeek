@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "lib": ["DOM", "ES2017"],
+    "outDir": "dist",
+    "noEmit": true
+  },
+  "include": ["src"]
+}
