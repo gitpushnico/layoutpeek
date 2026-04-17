@@ -470,6 +470,21 @@ kbd.inline {
   line-height: 1.55;
 }
 
+.privacy-box {
+  margin-top: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.privacy-label {
+  margin-top: var(--sp-6);
+}
+
 .toolbox-arrow {
   font-size: 1.125rem;
   color: var(--text-tertiary);
@@ -664,6 +679,8 @@ footer {
         </div>
         <span class="toolbox-arrow" aria-hidden="true">→</span>
       </a>
+      <p class="section-label privacy-label">Privacy</p>
+      <p class="privacy-box">No tracking cookies, no analytics, and no third-party scripts are used on this site. Just strictly necessary functionality is used to make the site work.</p>
     </section>
 
   </main>
