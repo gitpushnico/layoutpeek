@@ -36,6 +36,8 @@ function main(): void {
   let hoveredEl: Element | null = null
   let selectedEl: Element | null = null
   let altDown = false
+  let mouseX = 0
+  let mouseY = 0
   let guides: Guide[] = []
   let selectedGuide: Guide | null = null
   let guideIdSeq = 0
@@ -70,12 +72,15 @@ function main(): void {
 
 
   function onMouseMove(e: MouseEvent): void {
-    // Guide preview: update regardless of which mode we're in
+    mouseX = e.clientX
+    mouseY = e.clientY
+
     if (mode === 'guides') {
       guidePreview.className = `lp-guide lp-guide-${guideDir} lp-guide-preview`
       if (guideDir === 'h') guidePreview.style.top = e.clientY + 'px'
       else guidePreview.style.left = e.clientX + 'px'
       guidePreview.style.display = 'block'
+      if (altDown) refreshSVG()
       return
     }
 
@@ -205,10 +210,13 @@ function main(): void {
       posStart = guide.pos
 
       const onMove = (e: MouseEvent) => {
+        mouseX = e.clientX
+        mouseY = e.clientY
         const delta = (dir === 'h' ? e.clientY : e.clientX) - dragStart
         const newPos = Math.max(0, posStart + delta)
         guide.pos = newPos
         positionGuide(el, dir, newPos)
+        if (altDown) refreshSVG()
       }
 
       const onUp = () => {
@@ -224,6 +232,7 @@ function main(): void {
     })
 
     pushHistory({ type: 'add', guide })
+    if (altDown) refreshSVG()
     return guide
   }
 
@@ -232,6 +241,7 @@ function main(): void {
     guides = guides.filter(x => x !== g)
     if (selectedGuide === g) selectedGuide = null
     pushHistory({ type: 'remove', guide: g })
+    if (mode === 'guides' && altDown) refreshSVG()
   }
 
   function positionGuide(el: HTMLElement, dir: GuideDir, pos: number): void {
@@ -267,6 +277,12 @@ function main(): void {
   // Master SVG refresh — called on every state change
   function refreshSVG(): void {
     clearSVG()
+
+    if (mode === 'guides' && altDown) {
+      renderGuideToGuideDistances()
+      return
+    }
+
     if (mode !== 'select') return
 
     if (altDown) {
@@ -289,6 +305,28 @@ function main(): void {
       }
       // Spacing overlay always visible on selected element
       if (selectedEl) drawSpacing(svgLayer, selectedEl)
+    }
+  }
+
+  // Guide → guide distance lines (Alt mode in ruler mode)
+  function renderGuideToGuideDistances(): void {
+    renderAdjacentGuideDistances('h')
+    renderAdjacentGuideDistances('v')
+  }
+
+  function renderAdjacentGuideDistances(dir: GuideDir): void {
+    const same = guides.filter(g => g.dir === dir).sort((a, b) => a.pos - b.pos)
+    for (let i = 0; i < same.length - 1; i++) {
+      const a = same[i]
+      const b = same[i + 1]
+      const dist = b.pos - a.pos
+      if (dir === 'h') {
+        const x = clamp(mouseX, 60, window.innerWidth - 60)
+        drawMeasure(svgLayer, x, a.pos, x, b.pos, px(dist))
+      } else {
+        const y = clamp(mouseY, 20, window.innerHeight - 20)
+        drawMeasure(svgLayer, a.pos, y, b.pos, y, px(dist))
+      }
     }
   }
 
