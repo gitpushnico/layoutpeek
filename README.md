@@ -13,6 +13,7 @@ Made by [gitpushnico](https://github.com/gitpushnico).
 - Hover for readouts; **G** for ruler mode, **H** / **V** to place lines.
 - **Alt**/**Option** in select mode (**S**): measure gaps between elements (click one, then hover another) or from ruler lines to a hovered element.
 - **Alt**/**Option** in ruler mode: measure the distance between placed lines of the same direction.
+- **Alt+Shift** (Option+Shift): pin measurements on screen so you can release the keys and take a screenshot. Press again or click **Pinned** to unpin.
 
 ## How it’s built
 

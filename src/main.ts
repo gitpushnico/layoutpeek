@@ -23,6 +23,13 @@ type HistoryAction =
   | { type: 'remove'; guide: Guide }
   | { type: 'move'; guide: Guide; from: number; to: number }
 
+interface MeasurePin {
+  mouseX: number
+  mouseY: number
+  selectedEl: Element | null
+  hoveredEl: Element | null
+}
+
 
 function main(): void {
 
@@ -36,6 +43,7 @@ function main(): void {
   let hoveredEl: Element | null = null
   let selectedEl: Element | null = null
   let altDown = false
+  let measurePin: MeasurePin | null = null
   let mouseX = 0
   let mouseY = 0
   let guides: Guide[] = []
@@ -71,20 +79,81 @@ function main(): void {
   }
 
 
+  function measurementsActive(): boolean {
+    return altDown || measurePin !== null
+  }
+
+  function measureAtX(): number {
+    return measurePin?.mouseX ?? mouseX
+  }
+
+  function measureAtY(): number {
+    return measurePin?.mouseY ?? mouseY
+  }
+
+  function hasMeasurementsToShow(): boolean {
+    if (mode === 'guides') {
+      const h = guides.filter(g => g.dir === 'h').length
+      const v = guides.filter(g => g.dir === 'v').length
+      return h >= 2 || v >= 2
+    }
+    const sel = measurePin?.selectedEl ?? selectedEl
+    const hov = measurePin?.hoveredEl ?? hoveredEl
+    if (sel && hov && hov !== sel) return true
+    if (hov) return true
+    return false
+  }
+
+  function pinMeasurements(): void {
+    measurePin = {
+      mouseX,
+      mouseY,
+      selectedEl,
+      hoveredEl,
+    }
+    hlEl.style.display = 'none'
+    if (mode === 'guides') guidePreview.style.display = 'none'
+    window.addEventListener('scroll', refreshSVG, true)
+    window.addEventListener('resize', refreshSVG)
+    refreshSVG()
+    refreshToolbar()
+  }
+
+  function unpinMeasurements(): void {
+    if (!measurePin) return
+    measurePin = null
+    window.removeEventListener('scroll', refreshSVG, true)
+    window.removeEventListener('resize', refreshSVG)
+    if (mode === 'guides') guidePreview.style.display = 'block'
+    refreshSVG()
+    refreshToolbar()
+  }
+
+  function toggleMeasurePin(): void {
+    if (measurePin) {
+      unpinMeasurements()
+    } else if (hasMeasurementsToShow()) {
+      pinMeasurements()
+    }
+  }
+
+
   function onMouseMove(e: MouseEvent): void {
     mouseX = e.clientX
     mouseY = e.clientY
 
     if (mode === 'guides') {
-      guidePreview.className = `lp-guide lp-guide-${guideDir} lp-guide-preview`
-      if (guideDir === 'h') guidePreview.style.top = e.clientY + 'px'
-      else guidePreview.style.left = e.clientX + 'px'
-      guidePreview.style.display = 'block'
-      if (altDown) refreshSVG()
+      if (!measurePin) {
+        guidePreview.className = `lp-guide lp-guide-${guideDir} lp-guide-preview`
+        if (guideDir === 'h') guidePreview.style.top = e.clientY + 'px'
+        else guidePreview.style.left = e.clientX + 'px'
+        guidePreview.style.display = 'block'
+      }
+      if (measurementsActive()) refreshSVG()
       return
     }
 
-    // Select mode
+    if (measurePin) return
     const el = document.elementFromPoint(e.clientX, e.clientY)
     hoveredEl = (!el || isOurs(el)) ? null : el
 
@@ -135,7 +204,18 @@ function main(): void {
       refreshSVG()
     }
 
-    if (key === 'Escape') cleanup()
+    if (key === 'Shift' && altDown && !e.repeat) {
+      e.preventDefault()
+      toggleMeasurePin()
+    }
+
+    if (key === 'Escape') {
+      if (measurePin) {
+        unpinMeasurements()
+        return
+      }
+      cleanup()
+    }
     if (key === 'm' || key === 'M') cleanup()
     if (key === 's' || key === 'S') switchMode('select')
     if (key === 'g' || key === 'G') switchMode('guides')
@@ -166,6 +246,7 @@ function main(): void {
 
 
   function switchMode(m: Mode): void {
+    unpinMeasurements()
     mode = m
     if (m === 'select') {
       guidePreview.style.display = 'none'
@@ -216,7 +297,7 @@ function main(): void {
         const newPos = Math.max(0, posStart + delta)
         guide.pos = newPos
         positionGuide(el, dir, newPos)
-        if (altDown) refreshSVG()
+        if (measurementsActive()) refreshSVG()
       }
 
       const onUp = () => {
@@ -232,7 +313,7 @@ function main(): void {
     })
 
     pushHistory({ type: 'add', guide })
-    if (altDown) refreshSVG()
+    if (measurementsActive()) refreshSVG()
     return guide
   }
 
@@ -241,7 +322,7 @@ function main(): void {
     guides = guides.filter(x => x !== g)
     if (selectedGuide === g) selectedGuide = null
     pushHistory({ type: 'remove', guide: g })
-    if (mode === 'guides' && altDown) refreshSVG()
+    if (mode === 'guides' && measurementsActive()) refreshSVG()
   }
 
   function positionGuide(el: HTMLElement, dir: GuideDir, pos: number): void {
@@ -278,25 +359,15 @@ function main(): void {
   function refreshSVG(): void {
     clearSVG()
 
-    if (mode === 'guides' && altDown) {
+    if (mode === 'guides' && measurementsActive()) {
       renderGuideToGuideDistances()
       return
     }
 
     if (mode !== 'select') return
 
-    if (altDown) {
-      // Alt mode: distances
-      if (selectedEl && hoveredEl && hoveredEl !== selectedEl) {
-        // Element → element distances
-        renderDistances(svgLayer, selectedEl, hoveredEl)
-      } else if (hoveredEl) {
-        // Just show the hovered box
-        appendSVGRect(svgLayer, hoveredEl.getBoundingClientRect())
-        drawDimensions(svgLayer, hoveredEl.getBoundingClientRect())
-      }
-      // Guide → element distances (always when Alt held and hovering)
-      if (hoveredEl) renderGuideDistances(hoveredEl)
+    if (measurementsActive()) {
+      renderAltMeasurements()
     } else {
       // Normal mode: dimensions + spacing overlay
       if (hoveredEl) drawDimensions(svgLayer, hoveredEl.getBoundingClientRect())
@@ -306,6 +377,19 @@ function main(): void {
       // Spacing overlay always visible on selected element
       if (selectedEl) drawSpacing(svgLayer, selectedEl)
     }
+  }
+
+  function renderAltMeasurements(): void {
+    const sel = measurePin?.selectedEl ?? selectedEl
+    const hov = measurePin?.hoveredEl ?? hoveredEl
+
+    if (sel && hov && hov !== sel) {
+      renderDistances(svgLayer, sel, hov)
+    } else if (hov) {
+      appendSVGRect(svgLayer, hov.getBoundingClientRect())
+      drawDimensions(svgLayer, hov.getBoundingClientRect())
+    }
+    if (hov) renderGuideDistances(hov)
   }
 
   // Guide → guide distance lines (Alt mode in ruler mode)
@@ -321,10 +405,10 @@ function main(): void {
       const b = same[i + 1]
       const dist = b.pos - a.pos
       if (dir === 'h') {
-        const x = clamp(mouseX, 60, window.innerWidth - 60)
+        const x = clamp(measureAtX(), 60, window.innerWidth - 60)
         drawMeasure(svgLayer, x, a.pos, x, b.pos, px(dist))
       } else {
-        const y = clamp(mouseY, 20, window.innerHeight - 20)
+        const y = clamp(measureAtY(), 20, window.innerHeight - 20)
         drawMeasure(svgLayer, a.pos, y, b.pos, y, px(dist))
       }
     }
@@ -394,6 +478,7 @@ function main(): void {
   toolbar.querySelector('#lp-t-gui')!.addEventListener('click', () => switchMode('guides'))
   toolbar.querySelector('#lp-t-h')!.addEventListener('click', () => { guideDir = 'h'; refreshToolbar() })
   toolbar.querySelector('#lp-t-v')!.addEventListener('click', () => { guideDir = 'v'; refreshToolbar() })
+  toolbar.querySelector('#lp-pin')!.addEventListener('click', () => unpinMeasurements())
 
   function refreshToolbar(): void {
     const selBtn = toolbar.querySelector('#lp-t-sel')!
@@ -401,12 +486,14 @@ function main(): void {
     const orient = toolbar.querySelector('#lp-orient') as HTMLElement
     const hBtn = toolbar.querySelector('#lp-t-h')!
     const vBtn = toolbar.querySelector('#lp-t-v')!
+    const pinBadge = toolbar.querySelector('#lp-pin') as HTMLElement
 
     selBtn.classList.toggle('lp-on', mode === 'select')
     guiBtn.classList.toggle('lp-on', mode === 'guides')
     orient.classList.toggle('lp-show', mode === 'guides')
     hBtn.classList.toggle('lp-on', guideDir === 'h')
     vBtn.classList.toggle('lp-on', guideDir === 'v')
+    pinBadge.classList.toggle('lp-show', measurePin !== null)
   }
 
 
@@ -464,6 +551,7 @@ function main(): void {
 
 
   function cleanup(): void {
+    unpinMeasurements()
     toolbar.remove()
     hlEl.remove()
     selEl.remove()
@@ -496,7 +584,8 @@ function buildToolbar(): HTMLElement {
     `<div id="lp-orient" class="lp-orient">` +
       `<button id="lp-t-h" class="lp-obtn lp-on">H</button>` +
       `<button id="lp-t-v" class="lp-obtn">V</button>` +
-    `</div>`
+    `</div>` +
+    `<button id="lp-pin" class="lp-pin" data-tip="Pinned — click or ⌥⇧ to unpin">Pinned</button>`
   return el
 }
 

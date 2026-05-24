@@ -71,6 +71,48 @@ export const CSS = `
 
 .lp-obtn.lp-on { background: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
+.lp-pin {
+  display: none;
+  align-items: center;
+  height: 22px;
+  border: none;
+  background: rgba(249,115,22,.14);
+  border-radius: 5px;
+  padding: 0 7px;
+  margin-left: 2px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  color: #c2410c;
+  letter-spacing: .02em;
+  font-family: inherit;
+  position: relative;
+}
+
+.lp-pin.lp-show { display: flex; }
+.lp-pin:hover { background: rgba(249,115,22,.22); }
+
+.lp-pin::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #fff;
+  font-size: 10px;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .1s;
+  letter-spacing: .02em;
+  font-weight: 500;
+}
+
+.lp-pin:hover::after { opacity: 1; }
+
 /* Tooltip */
 .lp-btn::after {
   content: attr(data-tip);
