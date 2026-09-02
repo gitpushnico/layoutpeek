@@ -2,21 +2,16 @@
 
 Assets listed here are **not** covered by the MIT License in `LICENSE`. Everything else in this repository (including the bookmarklet source) is MIT-licensed unless stated otherwise.
 
-## `landing/toolbox98.png`
+Fonts are **self-hosted**. The website loads them from `landing/fonts/` via `@font-face` in `landing/peek.css`. There is no runtime request to Google Fonts, jsDelivr, or any other third-party font host.
 
-- **Source:** W100-2 Design System by Gustavo Luz (Figma Community) — https://www.figma.com/community/file/1205445784466486810
-- **Author:** Gustavo Luz — https://www.figma.com/@gustaluz
-- **License:** CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-- **Use here:** Exported and resized for the marketing page; attribution retained in this file.
+## `landing/fonts/IBMPlexSans-Regular.woff2`, `landing/fonts/IBMPlexSans-Italic.woff2`, `landing/fonts/IBMPlexSans-Medium.woff2`
 
-## `landing/fonts/DMSans-VariableFont_opsz,wght.ttf`, `landing/fonts/DMSans-Italic-VariableFont_opsz,wght.ttf`
+- **Source:** IBM Plex Sans — https://github.com/IBM/plex
+- **License:** SIL Open Font License 1.1 — see `landing/fonts/OFL-IBMPlexSans.txt`
+- **Use here:** Latin subset (woff2), served from this origin only.
 
-- **Source:** DM Sans (Google Fonts) — https://fonts.google.com/specimen/DM+Sans?preview.script=Latn
-- **License:** SIL Open Font License 1.1 — https://fonts.google.com/specimen/DM+Sans/license?preview.script=Latn
-- **Use here:** Self-hosted variable font files for local rendering on the landing page (no runtime fetch from Google Fonts CDN).
+## `landing/fonts/IBMPlexMono-Regular.woff2`, `landing/fonts/IBMPlexMono-Medium.woff2`
 
-## `landing/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf`, `landing/fonts/Fraunces-Italic-VariableFont_SOFT,WONK,opsz,wght.ttf`
-
-- **Source:** Fraunces (Google Fonts) — https://fonts.google.com/specimen/Fraunces?preview.script=Latn
-- **License:** SIL Open Font License 1.1 — https://fonts.google.com/specimen/Fraunces/license?preview.script=Latn
-- **Use here:** Self-hosted variable font files for local rendering on the landing page (no runtime fetch from Google Fonts CDN).
+- **Source:** IBM Plex Mono — https://github.com/IBM/plex
+- **License:** SIL Open Font License 1.1 — see `landing/fonts/OFL-IBMPlexMono.txt`
+- **Use here:** Latin subset (woff2), served from this origin only.

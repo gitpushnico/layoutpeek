@@ -1,0 +1,442 @@
+/* Peek design system — shared by FontPeek and LayoutPeek.
+   Copy this file as-is into layoutpeek (landing/peek.css) and keep tokens in sync.
+   Product-specific demo content stays in each landing page. */
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("./fonts/IBMPlexSans-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("./fonts/IBMPlexSans-Italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("./fonts/IBMPlexSans-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./fonts/IBMPlexMono-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./fonts/IBMPlexMono-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --paper: #f6f3ee;
+  --ink: #141210;
+  --mute: #6f6a63;
+  --faint: #9a948b;
+  --line: #e4dfd6;
+  --surface: #fffdf9;
+  --mark: #c43c28;
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text: 16px;
+  --text-sm: 13px;
+  --text-xs: 11px;
+  --text-title: clamp(1.75rem, 1.2vw + 1.4rem, 2.125rem);
+
+  --space: 8px;
+  --page: 720px;
+  --radius: 2px;
+
+  --z-overlay: 100;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-kerning: normal; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text);
+  font-weight: 400;
+  line-height: 1.55;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space);
+  background: var(--ink);
+  color: var(--surface);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  z-index: var(--z-tooltip);
+}
+.skip-link:focus { top: var(--space); }
+
+.page {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+@media (min-width: 720px) {
+  .page { padding: 56px 32px 96px; }
+}
+
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 56px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.nav-mark {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.nav-name {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.nav-family {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.nav-family a,
+.nav-family span[aria-current] {
+  color: var(--mute);
+  text-decoration: none;
+}
+
+.nav-family span[aria-current] {
+  color: var(--ink);
+}
+
+.nav-family a:hover { color: var(--ink); }
+
+.nav-family .sep {
+  color: var(--line);
+  user-select: none;
+}
+
+.hero { margin-bottom: 48px; }
+
+.hero h1 {
+  font-size: var(--text-title);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.lead {
+  font-size: 1.0625rem;
+  color: var(--mute);
+  line-height: 1.55;
+  max-width: 44ch;
+  margin-bottom: 28px;
+}
+
+.install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-install,
+.btn-copy,
+.fi-copy {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: var(--radius);
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.btn-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 10px 16px;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.btn-install .hint {
+  font-weight: 400;
+  font-size: var(--text-xs);
+  color: rgba(255, 253, 249, 0.5);
+}
+
+.btn-install:hover { opacity: 0.88; }
+.btn-install:active {
+  cursor: grabbing;
+  opacity: 0.8;
+}
+
+.btn-copy {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--mute);
+  padding: 10px 14px;
+}
+
+.btn-copy:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.btn-copy:active { background: var(--line); }
+
+.btn-install:focus,
+.btn-copy:focus,
+.fi-copy:focus,
+.nav-family a:focus,
+.footer a:focus { outline: none; }
+
+.btn-install:focus-visible,
+.btn-copy:focus-visible,
+.fi-copy:focus-visible,
+.nav-family a:focus-visible,
+.footer a:focus-visible {
+  outline: 1px solid var(--mark);
+  outline-offset: 3px;
+}
+
+.install-note {
+  font-size: var(--text-xs);
+  color: var(--faint);
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+@media (max-width: 400px) {
+  .install { flex-direction: column; align-items: stretch; }
+  .btn-install, .btn-copy { justify-content: center; }
+}
+
+.demo {
+  margin-bottom: 48px;
+}
+
+.demo-frame {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .demo-frame { padding: 48px 40px; }
+}
+
+.demo-hint {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+}
+
+.steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  gap: 12px;
+  align-items: start;
+  font-size: var(--text-sm);
+  color: var(--mute);
+  line-height: 1.5;
+}
+
+.steps .n {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+  padding-top: 2px;
+}
+
+.steps strong { color: var(--ink); font-weight: 500; }
+
+footer {
+  padding-top: 20px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  font-size: var(--text-xs);
+  color: var(--faint);
+  line-height: 1.5;
+}
+
+.footer-link {
+  margin-left: auto;
+  color: var(--faint);
+  text-decoration: none;
+}
+
+.footer-link:hover { color: var(--ink); }
+
+/* Landing inspector — keep visual language in sync with the bookmarklet overlay. */
+
+#fi-overlay {
+  position: fixed;
+  z-index: var(--z-overlay);
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  min-width: 228px;
+  max-width: 280px;
+  pointer-events: none;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  display: none;
+}
+
+.fi-head {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--mute);
+  margin-bottom: 10px;
+}
+
+.fi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fi-row:last-of-type { border-bottom: none; }
+
+.fi-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--mute);
+}
+
+.fi-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: right;
+  max-width: 156px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.fi-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.fi-copy {
+  pointer-events: all;
+  margin-top: 12px;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: var(--text-xs);
+  padding: 8px;
+  min-height: 36px;
+}
+
+.fi-copy:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+#fi-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--surface);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  z-index: var(--z-toast);
+  opacity: 0;
+  transition: opacity 120ms linear;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #fi-toast { transition: none; }
+}

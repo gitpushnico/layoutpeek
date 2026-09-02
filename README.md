@@ -21,4 +21,4 @@ Made by [gitpushnico](https://github.com/gitpushnico).
 
 ## License
 
-MIT — see `LICENSE`. Third-party assets and logo attribution are in `THIRD_PARTY_NOTICES.md`.
+MIT — see `LICENSE`. Third-party font licensing is in `THIRD_PARTY_NOTICES.md`.
