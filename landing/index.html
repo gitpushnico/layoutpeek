@@ -76,36 +76,6 @@ kbd.inline {
   color: var(--ink);
 }
 
-.guide {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 48px;
-}
-
-.guide li {
-  display: grid;
-  grid-template-columns: 5.25rem 1fr;
-  gap: 16px;
-  align-items: start;
-  font-size: var(--text-sm);
-  color: var(--mute);
-  line-height: 1.5;
-}
-
-.guide .k {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--faint);
-  padding-top: 2px;
-}
-
-.guide strong {
-  color: var(--ink);
-  font-weight: 500;
-}
-
 #lp-demo-hl {
   position: fixed;
   z-index: 99998;
@@ -184,12 +154,11 @@ kbd.inline {
       <p class="demo-hint">Hover the sample. Hold Option / Alt, click one block, then hover another for the gap.</p>
     </section>
 
-    <ul class="guide" aria-label="How to use">
-      <li><span class="k">select</span><span>Hover for size. Click to select. Hold <kbd class="inline">Alt</kbd> for the gap. <kbd class="inline">Shift</kbd> pins.</span></li>
-      <li><span class="k">rulers</span><span><kbd class="inline">G</kbd>, then <kbd class="inline">H</kbd> or <kbd class="inline">V</kbd>. Click to place. Drag to move. <kbd class="inline">Alt</kbd> between lines. <kbd class="inline">Del</kbd> deletes.</span></li>
-      <li><span class="k">spacing</span><span>Margin, border and padding as colored layers on the selected element.</span></li>
-      <li><span class="k">install</span><span>Drag <strong>LayoutPeek</strong> to your bookmarks bar, or paste as a bookmark URL. Click it on any page. <kbd class="inline">Esc</kbd> exits.</span></li>
-    </ul>
+    <ol class="steps" aria-label="How to use">
+      <li><span class="n">1</span><span>Drag <strong>LayoutPeek</strong> to your bookmarks bar, or paste the snippet as a bookmark URL.</span></li>
+      <li><span class="n">2</span><span>Open any page and click the bookmark. Hover for size. Click to select. Hold <kbd class="inline">Alt</kbd> for the gap.</span></li>
+      <li><span class="n">3</span><span><kbd class="inline">G</kbd>, then <kbd class="inline">H</kbd> or <kbd class="inline">V</kbd> to place ruler lines. <kbd class="inline">Esc</kbd> exits.</span></li>
+    </ol>
 
   </main>
 
