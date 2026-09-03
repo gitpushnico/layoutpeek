@@ -76,17 +76,32 @@ kbd.inline {
   color: var(--ink);
 }
 
-.modes {
+.guide {
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin-bottom: 48px;
+}
+
+.guide li {
+  display: grid;
+  grid-template-columns: 5.25rem 1fr;
+  gap: 16px;
+  align-items: start;
   font-size: var(--text-sm);
   color: var(--mute);
   line-height: 1.5;
 }
 
-.modes strong {
+.guide .k {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+  padding-top: 2px;
+}
+
+.guide strong {
   color: var(--ink);
   font-weight: 500;
 }
@@ -157,7 +172,7 @@ kbd.inline {
       <div class="demo-frame" id="demo-area">
         <div class="spec-display">Inspect anything.</div>
         <div class="spec-italic">Hover the sample for a live width × height readout. Only inside this box.</div>
-        <p class="spec-body">This preview uses the same hover ring as the bookmarklet.</p>
+        <p class="spec-body">The full bookmarklet also adds selection, ruler lines and spacing overlays. This preview uses the same hover ring.</p>
         <div class="demo-specimen">
           <div class="demo-avatar"></div>
           <div class="demo-meta">
@@ -169,16 +184,12 @@ kbd.inline {
       <p class="demo-hint">Hover the sample. Hold Option / Alt, click one block, then hover another for the gap.</p>
     </section>
 
-    <section class="modes" aria-label="What it does">
-      <p><strong>Select.</strong> Hover for size. Click to select. Hold <kbd class="inline">Alt</kbd> for the gap. <kbd class="inline">Shift</kbd> pins.</p>
-      <p><strong>Rulers.</strong> <kbd class="inline">G</kbd>, then <kbd class="inline">H</kbd> or <kbd class="inline">V</kbd>. Click to place. Drag to move. <kbd class="inline">Alt</kbd> between lines. <kbd class="inline">Del</kbd> deletes. <kbd class="inline">Cmd+Z</kbd> undoes.</p>
-      <p><strong>Spacing.</strong> Margin, border and padding as colored layers on the selected element.</p>
-    </section>
-
-    <ol class="steps" aria-label="How to use">
-      <li><span class="n">1</span><span>Drag <strong>LayoutPeek</strong> to your bookmarks bar, or paste the snippet as a bookmark URL.</span></li>
-      <li><span class="n">2</span><span>Open any page and click the bookmark. A toolbar appears in the top-left. <kbd class="inline">Esc</kbd> exits.</span></li>
-    </ol>
+    <ul class="guide" aria-label="How to use">
+      <li><span class="k">select</span><span>Hover for size. Click to select. Hold <kbd class="inline">Alt</kbd> for the gap. <kbd class="inline">Shift</kbd> pins.</span></li>
+      <li><span class="k">rulers</span><span><kbd class="inline">G</kbd>, then <kbd class="inline">H</kbd> or <kbd class="inline">V</kbd>. Click to place. Drag to move. <kbd class="inline">Alt</kbd> between lines. <kbd class="inline">Del</kbd> deletes.</span></li>
+      <li><span class="k">spacing</span><span>Margin, border and padding as colored layers on the selected element.</span></li>
+      <li><span class="k">install</span><span>Drag <strong>LayoutPeek</strong> to your bookmarks bar, or paste as a bookmark URL. Click it on any page. <kbd class="inline">Esc</kbd> exits.</span></li>
+    </ul>
 
   </main>
 
